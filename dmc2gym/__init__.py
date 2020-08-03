@@ -1,7 +1,6 @@
 import gym
 from gym.envs.registration import register
 
-
 def make(
         domain_name,
         task_name,
