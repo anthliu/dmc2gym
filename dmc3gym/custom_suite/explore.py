@@ -20,14 +20,16 @@ from __future__ import print_function
 
 from absl import app
 from absl import flags
-from dmc3gym import custom_suite as suite
+from dmc3gym import custom_suite
+from dm_control import suite
 from dm_control.suite.wrappers import action_noise
 from six.moves import input
 
 from dm_control import viewer
 
 
-_ALL_NAMES = ['.'.join(domain_task) for domain_task in suite.ALL_TASKS]
+_ALL_NAMES = ['.'.join(domain_task) for domain_task in suite.ALL_TASKS]\
+        + ['.'.join(domain_task) for domain_task in custom_suite.ALL_TASKS]
 
 flags.DEFINE_enum('environment_name', None, _ALL_NAMES,
                   'Optional \'domain_name.task_name\' pair specifying the '
@@ -63,15 +65,20 @@ def main(argv):
         'Please select an environment name: ', _ALL_NAMES)
 
   index = _ALL_NAMES.index(environment_name)
-  domain_name, task_name = suite.ALL_TASKS[index]
+  domain_name, task_name = (suite.ALL_TASKS + custom_suite.ALL_TASKS)[index]
 
   task_kwargs = {}
   if not FLAGS.timeout:
     task_kwargs['time_limit'] = float('inf')
 
   def loader():
-    env = suite.load(
-        domain_name=domain_name, task_name=task_name, task_kwargs=task_kwargs, environment_kwargs={'param': [0.5, 2]})
+    try:
+        env = suite.load(
+            domain_name=domain_name, task_name=task_name, task_kwargs=task_kwargs)
+    except ValueError:
+        env = custom_suite.load(
+            domain_name=domain_name, task_name=task_name, task_kwargs=task_kwargs, environment_kwargs={'param': [0.5, 1, 2]})
+
     env.task.visualize_reward = FLAGS.visualize_reward
     if FLAGS.action_noise > 0:
       env = action_noise.Wrapper(env, scale=FLAGS.action_noise)

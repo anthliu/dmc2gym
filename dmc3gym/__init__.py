@@ -1,3 +1,4 @@
+import hashlib
 import gym
 from gym.envs.registration import register
 
@@ -16,7 +17,9 @@ def make(
         time_limit=None,
         channels_first=True
 ):
-    env_id = 'dmc_%s_%s_%s-v1' % (domain_name, task_name, seed)
+    unique_args = int(hashlib.sha1(str(locals()).encode('utf8')).hexdigest(), 16) % (10 ** 8)
+
+    env_id = f'dmc_{domain_name}_{task_name}_s{seed}_{unique_args}-v1'
 
     if from_pixels:
         assert not visualize_reward, 'cannot use visualize reward when learning from pixels'
