@@ -1,5 +1,6 @@
 from gym import core, spaces
 from dm_control import suite
+from dmc3gym import custom_suite
 from dm_env import specs
 import numpy as np
 
@@ -58,13 +59,22 @@ class DMCWrapper(core.Env):
         self._channels_first = channels_first
 
         # create task
-        self._env = suite.load(
-            domain_name=domain_name,
-            task_name=task_name,
-            task_kwargs=task_kwargs,
-            visualize_reward=visualize_reward,
-            environment_kwargs=environment_kwargs
-        )
+        try:
+            self._env = suite.load(
+                domain_name=domain_name,
+                task_name=task_name,
+                task_kwargs=task_kwargs,
+                visualize_reward=visualize_reward,
+                environment_kwargs=environment_kwargs
+            )
+        except ValueError:
+            self._env = custom_suite.load(
+                domain_name=domain_name,
+                task_name=task_name,
+                task_kwargs=task_kwargs,
+                visualize_reward=visualize_reward,
+                environment_kwargs=environment_kwargs
+            )
 
         # true and normalized action spaces
         self._true_action_space = _spec_to_box([self._env.action_spec()])

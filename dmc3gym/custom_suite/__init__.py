@@ -22,14 +22,14 @@ import collections
 import inspect
 import itertools
 
-from dmc2gym.custom_suite import control
-from dmc2gym.custom_suite import custom_cartpole
-from dmc2gym.custom_suite import custom_cheetah
-from dmc2gym.custom_suite import custom_reacher
-from dmc2gym.custom_suite import custom_pendulum
-from dmc2gym.custom_suite import custom_ball_in_cup
-from dmc2gym.custom_suite import custom_finger
-from dmc2gym.custom_suite import custom_walker
+from dmc3gym.custom_suite import control
+from dmc3gym.custom_suite import custom_cartpole
+from dmc3gym.custom_suite import custom_cheetah
+from dmc3gym.custom_suite import custom_reacher
+from dmc3gym.custom_suite import custom_pendulum
+from dmc3gym.custom_suite import custom_ball_in_cup
+from dmc3gym.custom_suite import custom_finger
+from dmc3gym.custom_suite import custom_walker
 # Find all domains imported.
 _DOMAINS = {name: module for name, module in locals().items()
             if inspect.ismodule(module) and hasattr(module, 'SUITE')}

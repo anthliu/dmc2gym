@@ -20,7 +20,7 @@ from __future__ import print_function
 
 from absl import app
 from absl import flags
-from dmc2gym import custom_suite as suite
+from dmc3gym import custom_suite as suite
 from dm_control.suite.wrappers import action_noise
 from six.moves import input
 

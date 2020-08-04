@@ -22,7 +22,7 @@ from __future__ import print_function
 import collections
 
 from dm_control import mujoco
-from dmc2gym.custom_suite import control
+from dmc3gym.custom_suite import control
 from dm_control.suite import base
 from dm_control.suite import common
 from dm_control.suite.utils import randomizers

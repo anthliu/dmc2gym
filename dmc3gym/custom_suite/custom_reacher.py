@@ -30,7 +30,7 @@ from dm_control.utils import containers
 from dm_control.utils import rewards
 import numpy as np
 from lxml import etree
-from dmc2gym.custom_suite import control
+from dmc3gym.custom_suite import control
 
 SUITE = containers.TaggedTasks()
 _DEFAULT_TIME_LIMIT = 20
