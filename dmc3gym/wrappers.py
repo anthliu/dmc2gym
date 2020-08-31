@@ -1,4 +1,4 @@
-from gym import core, spaces
+from gym import core, spaces, utils
 from dm_control import suite
 from dmc3gym import custom_suite
 from dm_env import specs
@@ -35,7 +35,7 @@ def _flatten_obs(obs):
     return np.concatenate(obs_pieces, axis=0)
 
 
-class DMCWrapper(core.Env):
+class DMCWrapper(core.Env, utils.EzPickle):
     def __init__(
         self,
         domain_name,
@@ -57,6 +57,7 @@ class DMCWrapper(core.Env):
         self._camera_id = camera_id
         self._frame_skip = frame_skip
         self._channels_first = channels_first
+        self._environment_kwargs = environment_kwargs
 
         # create task
         try:
@@ -84,6 +85,7 @@ class DMCWrapper(core.Env):
             shape=self._true_action_space.shape,
             dtype=np.float32
         )
+        self._env.action_space = self._norm_action_space
 
         # create observation space
         if from_pixels:
@@ -104,6 +106,8 @@ class DMCWrapper(core.Env):
 
         # set seed
         self.seed(seed=task_kwargs.get('random', 1))
+
+        utils.EzPickle.__init__(self, domain_name, task_name, task_kwargs, visualize_reward, from_pixels, height, width, camera_id, frame_skip, environment_kwargs, channels_first)
 
     def __getattr__(self, name):
         return getattr(self._env, name)
@@ -148,9 +152,8 @@ class DMCWrapper(core.Env):
         self._observation_space.seed(seed)
 
     def step(self, action):
-        assert self._norm_action_space.contains(action)
+        action = np.clip(action, self._norm_action_space.low, self._norm_action_space.high)
         action = self._convert_action(action)
-        assert self._true_action_space.contains(action)
         reward = 0
         extra = {'internal_state': self._env.physics.get_state().copy()}
 

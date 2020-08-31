@@ -5,6 +5,7 @@ from gym.envs.registration import register
 def make(
         domain_name,
         task_name,
+        task_params,
         seed=1,
         visualize_reward=True,
         from_pixels=False,
@@ -33,6 +34,7 @@ def make(
             task_kwargs['random'] = seed
         if time_limit is not None:
             task_kwargs['time_limit'] = time_limit
+        task_kwargs['params'] = task_params
         register(
             id=env_id,
             entry_point='dmc3gym.wrappers:DMCWrapper',

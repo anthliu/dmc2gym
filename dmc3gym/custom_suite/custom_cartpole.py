@@ -43,11 +43,11 @@ def get_model_and_assets(pole_length=1, num_poles=1):
 
 
 @SUITE.add('benchmarking')
-def balance(time_limit=_DEFAULT_TIME_LIMIT, random=None,
+def balance(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None,
             environment_kwargs=None):
   """Returns the Cartpole Balance task."""
   physics = []
-  for pole_length in environment_kwargs['param']:
+  for pole_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(pole_length))
     physics.append(physic)
   task = Balance(swing_up=False, sparse=False, random=random)
@@ -57,11 +57,11 @@ def balance(time_limit=_DEFAULT_TIME_LIMIT, random=None,
       physics, task, time_limit=time_limit, **environment_kwargs)
 
 @SUITE.add('benchmarking')
-def balance_sparse(time_limit=_DEFAULT_TIME_LIMIT, random=None,
+def balance_sparse(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None,
                    environment_kwargs=None):
   """Returns the sparse reward variant of the Cartpole Balance task."""
   physics = []
-  for pole_length in environment_kwargs['param']:
+  for pole_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(pole_length))
     physics.append(physic)
   task = Balance(swing_up=False, sparse=True, random=random)
@@ -72,26 +72,25 @@ def balance_sparse(time_limit=_DEFAULT_TIME_LIMIT, random=None,
 
 
 @SUITE.add('benchmarking')
-def swingup(time_limit=_DEFAULT_TIME_LIMIT, random=None,
+def swingup(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None,
             environment_kwargs=None):
   """Returns the Cartpole Swing-Up task."""
   physics = []
-  for pole_length in environment_kwargs['param']:
+  for pole_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(pole_length))
     physics.append(physic)
   task = Balance(swing_up=True, sparse=False, random=random)
-  environment_kwargs.pop('param')
   environment_kwargs = environment_kwargs or {}
   return control.Environment(
       physics, task, time_limit=time_limit, **environment_kwargs)
 
 
 @SUITE.add('benchmarking')
-def swingup_sparse(time_limit=_DEFAULT_TIME_LIMIT, random=None,
+def swingup_sparse(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None,
                    environment_kwargs=None):
   """Returns the sparse reward variant of the Cartpole Swing-Up task."""
   physics = []
-  for pole_length in environment_kwargs['param']:
+  for pole_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(pole_length))
     physics.append(physic)
   task = Balance(swing_up=True, sparse=True, random=random)
