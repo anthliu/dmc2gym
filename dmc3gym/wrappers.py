@@ -1,6 +1,7 @@
 from gym import core, spaces, utils
 from dm_control import suite
 from dmc3gym import custom_suite
+from dmc3gym.output_augmentations import string_to_oa
 from dm_env import specs
 import numpy as np
 
@@ -48,7 +49,8 @@ class DMCWrapper(core.Env, utils.EzPickle):
         camera_id=0,
         frame_skip=1,
         environment_kwargs=None,
-        channels_first=True
+        channels_first=True,
+        output_augmentation='identity'
     ):
         assert 'random' in task_kwargs, 'please specify a seed, for deterministic behaviour'
         self._from_pixels = from_pixels
@@ -58,6 +60,8 @@ class DMCWrapper(core.Env, utils.EzPickle):
         self._frame_skip = frame_skip
         self._channels_first = channels_first
         self._environment_kwargs = environment_kwargs
+        self._action_aug_generator = string_to_oa(output_augmentation)
+        self._action_aug_f = self._action_aug_generator()
 
         # create task
         try:
@@ -107,7 +111,7 @@ class DMCWrapper(core.Env, utils.EzPickle):
         # set seed
         self.seed(seed=task_kwargs.get('random', 1))
 
-        utils.EzPickle.__init__(self, domain_name, task_name, task_kwargs, visualize_reward, from_pixels, height, width, camera_id, frame_skip, environment_kwargs, channels_first)
+        utils.EzPickle.__init__(self, domain_name, task_name, task_kwargs, visualize_reward, from_pixels, height, width, camera_id, frame_skip, environment_kwargs, channels_first, output_augmentation)
 
     def __getattr__(self, name):
         return getattr(self._env, name)
@@ -152,6 +156,7 @@ class DMCWrapper(core.Env, utils.EzPickle):
         self._observation_space.seed(seed)
 
     def step(self, action):
+        action = self._action_aug_f(action)
         action = np.clip(action, self._norm_action_space.low, self._norm_action_space.high)
         action = self._convert_action(action)
         reward = 0
@@ -169,6 +174,7 @@ class DMCWrapper(core.Env, utils.EzPickle):
         return obs, reward, done, extra
 
     def reset(self):
+        self._action_aug_f = self._action_aug_generator()
         time_step = self._env.reset()
         self.current_state = _flatten_obs(time_step.observation)
         obs = self._get_obs(time_step)

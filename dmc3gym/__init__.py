@@ -16,7 +16,8 @@ def make(
         episode_length=1000,
         environment_kwargs=None,
         time_limit=None,
-        channels_first=True
+        channels_first=True,
+        output_augmentation='identity'
 ):
     unique_args = int(hashlib.sha1(str(locals()).encode('utf8')).hexdigest(), 16) % (10 ** 8)
 
@@ -50,6 +51,7 @@ def make(
                 camera_id=camera_id,
                 frame_skip=frame_skip,
                 channels_first=channels_first,
+                output_augmentation=output_augmentation
             ),
             max_episode_steps=max_episode_steps,
         )
