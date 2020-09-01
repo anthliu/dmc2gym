@@ -1,7 +1,7 @@
 import numpy as np
 
 def string_to_oa(s):
-    dist, *args = s.split('|')
+    dist, *args = s.split('+')
     args = [float(arg) for arg in args]
     if dist == 'identity':
         return lambda: (lambda u: u)
