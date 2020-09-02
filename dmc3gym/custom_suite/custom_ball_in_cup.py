@@ -48,14 +48,13 @@ def get_model_and_assets(ball_size):
 
 
 @SUITE.add('benchmarking', 'easy')
-def catch(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
+def catch(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kwargs=None):
   """Returns the Ball-in-Cup task."""
   physics = []
-  for ball_size in environment_kwargs['param']:
+  for ball_size in params:
     physic = Physics.from_xml_string(*get_model_and_assets(ball_size))
     physics.append(physic)
   task = BallInCup(random=random)
-  environment_kwargs.pop('param')
   environment_kwargs = environment_kwargs or {}
   return control.Environment(
       physics, task, time_limit=time_limit, control_timestep=_CONTROL_TIMESTEP,

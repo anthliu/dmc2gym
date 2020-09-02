@@ -54,14 +54,13 @@ def get_model_and_assets(hand_length):
   return etree.tostring(mjcf, pretty_print=True), common.ASSETS
 
 @SUITE.add('benchmarking', 'easy')
-def easy(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
+def easy(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kwargs=None):
   """Returns reacher with sparse reward with 5e-2 tol and randomized target."""
   physics = []
-  for hand_length in environment_kwargs['param']:
+  for hand_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(hand_length))
     physics.append(physic)
   task = Reacher(target_size=_BIG_TARGET, random=random)
-  environment_kwargs.pop('param')
   environment_kwargs = environment_kwargs or {}
   return control.Environment(
       physics, task, time_limit=time_limit, **environment_kwargs)

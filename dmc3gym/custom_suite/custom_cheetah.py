@@ -62,14 +62,13 @@ def get_model_and_assets(body_length):
 
 
 @SUITE.add('benchmarking')
-def run(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
+def run(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kwargs=None):
   """Returns the run task."""
   physics = []
-  for body_length in environment_kwargs['param']:
+  for body_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(body_length))
     physics.append(physic)
   task = Cheetah(random=random)
-  environment_kwargs.pop('param')
   environment_kwargs = environment_kwargs or {}
   return control.Environment(physics, task, time_limit=time_limit,
                              **environment_kwargs)

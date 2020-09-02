@@ -70,14 +70,13 @@ def get_model_and_assets(body_length):
 
 
 @SUITE.add('benchmarking')
-def stand(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
+def stand(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kwargs=None):
   """Returns the Stand task."""
   physics = []
-  for leg_length in environment_kwargs['param']:
+  for leg_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(leg_length))
     physics.append(physic)
   task = PlanarWalker(move_speed=0, random=random)
-  environment_kwargs.pop('param')
   environment_kwargs = environment_kwargs or {}
   return control.Environment(
       physics, task, time_limit=time_limit, control_timestep=_CONTROL_TIMESTEP,
@@ -85,14 +84,13 @@ def stand(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
 
 
 @SUITE.add('benchmarking')
-def walk(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
+def walk(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kwargs=None):
   """Returns the Walk task."""
   physics = []
-  for leg_length in environment_kwargs['param']:
+  for leg_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(leg_length))
     physics.append(physic)
   task = PlanarWalker(move_speed=_WALK_SPEED, random=random)
-  environment_kwargs.pop('param')
   environment_kwargs = environment_kwargs or {}
   return control.Environment(
       physics, task, time_limit=time_limit, control_timestep=_CONTROL_TIMESTEP,
@@ -100,14 +98,13 @@ def walk(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
 
 
 @SUITE.add('benchmarking')
-def run(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
+def run(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kwargs=None):
   """Returns the Run task."""
   physics = []
-  for leg_length in environment_kwargs['param']:
+  for leg_length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(leg_length))
     physics.append(physic)
   task = PlanarWalker(move_speed=_RUN_SPEED, random=random)
-  environment_kwargs.pop('param')
   environment_kwargs = environment_kwargs or {}
   return control.Environment(
       physics, task, time_limit=time_limit, control_timestep=_CONTROL_TIMESTEP,

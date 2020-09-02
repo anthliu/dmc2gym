@@ -69,14 +69,13 @@ def get_model_and_assets(length):
   return etree.tostring(mjcf, pretty_print=True), common.ASSETS
 
 @SUITE.add('benchmarking')
-def spin(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
+def spin(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kwargs=None):
   """Returns the Spin task."""
   physics = []
-  for length in environment_kwargs['param']:
+  for length in params:
     physic = Physics.from_xml_string(*get_model_and_assets(length))
     physics.append(physic)
   task = Spin(random=random)
-  environment_kwargs.pop('param') 
   environment_kwargs = environment_kwargs or {}
   return control.Environment(
       physics, task, time_limit=time_limit, control_timestep=_CONTROL_TIMESTEP,
@@ -84,7 +83,7 @@ def spin(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
 
 
 @SUITE.add('benchmarking')
-def turn_easy(time_limit=_DEFAULT_TIME_LIMIT, random=None,
+def turn_easy(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None,
               environment_kwargs=None):
   """Returns the easy Turn task."""
   physics = Physics.from_xml_string(*get_model_and_assets())
@@ -96,7 +95,7 @@ def turn_easy(time_limit=_DEFAULT_TIME_LIMIT, random=None,
 
 
 @SUITE.add('benchmarking')
-def turn_hard(time_limit=_DEFAULT_TIME_LIMIT, random=None,
+def turn_hard(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None,
               environment_kwargs=None):
   """Returns the hard Turn task."""
   physics = Physics.from_xml_string(*get_model_and_assets())
