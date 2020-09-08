@@ -168,7 +168,6 @@ class Environment(dm_env.Environment):
     """Returns the interval between agent actions in seconds."""
     return self.physics.timestep() * self._n_sub_steps
 
-
 def compute_n_steps(control_timestep, physics_timestep, tolerance=1e-8):
   """Returns the number of physics timesteps in a single control timestep.
   Args:

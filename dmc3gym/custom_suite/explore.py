@@ -76,8 +76,9 @@ def main(argv):
         env = suite.load(
             domain_name=domain_name, task_name=task_name, task_kwargs=task_kwargs)
     except ValueError:
+        task_kwargs['params'] = [0.25, 1.0, 8]
         env = custom_suite.load(
-            domain_name=domain_name, task_name=task_name, task_kwargs=task_kwargs, environment_kwargs={'param': [0.8, 1.0, 1.2]})
+            domain_name=domain_name, task_name=task_name, task_kwargs=task_kwargs)
 
     env.task.visualize_reward = FLAGS.visualize_reward
     if FLAGS.action_noise > 0:

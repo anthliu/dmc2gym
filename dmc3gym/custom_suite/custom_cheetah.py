@@ -73,6 +73,19 @@ def run(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kw
   return control.Environment(physics, task, time_limit=time_limit,
                              **environment_kwargs)
 
+@SUITE.add('benchmarking')
+def runmv(time_limit=_DEFAULT_TIME_LIMIT, random=None, params=None, environment_kwargs=None):
+  """Returns the run task."""
+  physics = []
+  for mass in params:
+    physic = Physics.from_xml_string(*get_model_and_assets(0.5))
+    physic.model.body_mass[:] = mass
+    physics.append(physic)
+  task = Cheetah(random=random)
+  environment_kwargs = environment_kwargs or {}
+  return control.Environment(physics, task, time_limit=time_limit,
+                             **environment_kwargs)
+
 
 class Physics(mujoco.Physics):
   """Physics simulation with additional features for the Cheetah domain."""
@@ -92,7 +105,7 @@ class Cheetah(base.Task):
     is_limited = physics.model.jnt_limited == 1
     lower, upper = physics.model.jnt_range[is_limited].T
     physics.data.qpos[is_limited] = self.random.uniform(lower, upper)
-
+    
     # Stabilize the model before the actual simulation.
     for _ in range(200):
       physics.step()
