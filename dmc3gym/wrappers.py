@@ -156,6 +156,7 @@ class DMCWrapper(core.Env, utils.EzPickle):
         self._observation_space.seed(seed)
 
     def step(self, action):
+        action = np.clip(action, self._norm_action_space.low, self._norm_action_space.high)
         action = self._action_aug_f(action)
         action = np.clip(action, self._norm_action_space.low, self._norm_action_space.high)
         action = self._convert_action(action)
